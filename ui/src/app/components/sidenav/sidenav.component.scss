@@ -1,6 +1,33 @@
 .sideNav{
-    background-color: red;
-    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    width: 15%;
     min-height: 100vh;
     max-height: auto;
+}
+.header{
+    color: #3E64FF;
+}
+.header h2{
+    cursor: pointer;
+}
+.links ul li{
+    list-style: none;
+    margin: 30px 0;
+    cursor: pointer;
+}
+.footer ul li{
+    list-style: none;
+    margin: 30px 0;
+    cursor: pointer;
+}
+ul li:hover{
+    color: #3E64FF;
+
+}
+i{
+    margin-right: 5px;
 }
