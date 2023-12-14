@@ -3,3 +3,13 @@
     padding: 0;
     background-color: #FAFAFB;
 }
+.main{
+    display: flex;
+    width: 100%;
+}
+.main .sidenav{
+    width: 15%;
+}
+.main .core{
+    width: 85%;
+}
