@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-dashboard',
