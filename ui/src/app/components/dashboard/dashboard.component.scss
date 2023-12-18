@@ -17,7 +17,7 @@
 .main .left-container{
     border: 1px solid red;
     width: 80%;
-    background-color: #FFFF;
+    padding: 10px;
 }
 .main .right-container{
     border: 1px solid black;
@@ -25,6 +25,37 @@
     background-color: #FFFF;
 }
 .left-container .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.search{
+    display: flex;
+    align-items: center;
+    height: 30px;
+    width: 200px;
+    border-radius: 20px;
+    padding: 10px;
+    outline: gray;
+}
+.icons{
+    padding: 10px;
+}
+.icons .pi{
+    margin: 5px;
+}
+.cards{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+}
+.cards .appointment-card{
+    background-color: #FFF;
+    // border: 1px solid red;
+    height: 100px;
+    padding: 5px;
+}
+.appointment-card .card-title{
     display: flex;
     align-items: center;
     justify-content: space-between;
