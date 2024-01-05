@@ -4,7 +4,7 @@
     background-color: #FFFF;
     width: 100%;
     height: 100%;
-    padding: 15px;
+    padding: 10px;
 }
 .main{
     display: flex;
@@ -15,14 +15,20 @@
     padding: 50px;
 }
 .main .left-container{
-    border: 1px solid red;
     width: 80%;
     padding: 10px;
 }
 .main .right-container{
-    border: 1px solid black;
-    width: 20%;
+    width:auto;
     background-color: #FFFF;
+}
+.right-container .card{
+    padding: 20px 0;
+}
+.right-container .card .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .left-container .header{
     display: flex;
@@ -42,7 +48,10 @@
     padding: 10px;
 }
 .icons .pi{
+    background-color: #ffff;
+    border: 2px solid red;
     margin: 5px;
+    padding: 2px;
 }
 .day{
     margin: 10px 0;
@@ -55,11 +64,22 @@
 .cards .appointment-card{
     background-color: #FFF;
     // border: 1px solid red;
-    height: 100px;
+    height: auto;
     padding: 5px;
 }
 .appointment-card .card-title{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+.table-card{
+    margin-top: 20px;
+}
+.table-card .card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.table-card tr{
+    height: 50px;
 }
