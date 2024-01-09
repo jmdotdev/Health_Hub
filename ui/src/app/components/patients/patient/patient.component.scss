@@ -1,0 +1,35 @@
+.patient{
+    display: flex;
+    align-items: center;
+    background-color: #FFFF;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+.main{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #FAFAFB;
+    border-radius: 20px;
+    padding: 40px;
+}
+.patient-section{
+    display: flex;
+    flex-direction: column;
+    margin: 0px auto;
+    width: 100%;
+    background-color: #FFFF;
+    padding: 20px;
+}
+.patient-section .header{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.patient-section .header .icons .pi{
+    margin: 0 5px;
+}
+.patient-section .table-card{
+    margin-top: 30px;
+}
