@@ -6,5 +6,6 @@ namespace api.Services.UserService
     public interface IUserService
     {
         Task<User> RegisterUserService(UserDto userDto);
+        Task<User> LoginUserService(UserDto userDto);
     }
 }

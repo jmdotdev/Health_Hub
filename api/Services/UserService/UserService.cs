@@ -2,6 +2,9 @@
 using api.DTO;
 using api.Models;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services.UserService
 {
@@ -27,6 +30,17 @@ namespace api.Services.UserService
             await _dataContext.Users.AddAsync(user);
           await _dataContext.SaveChangesAsync();
           return user;
+        }
+
+
+        public async Task<User> LoginUserService(UserDto userDto)
+        {
+            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == userDto.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(userDto.Password, user.Password))
+            {
+                throw new Exception("invalid email or password");
+            }
+            return user;
         }
     }
 }

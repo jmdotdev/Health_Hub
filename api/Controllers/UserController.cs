@@ -16,11 +16,26 @@ namespace api.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<ActionResult<User>> RegisterUser(UserDto userDto)
         {
             var result = await _userService.RegisterUserService(userDto);
             return result;
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> LoginUser(UserDto userDto)
+        {
+            try
+            {
+                var result = await _userService.LoginUserService(userDto);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
