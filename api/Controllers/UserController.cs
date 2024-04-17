@@ -24,7 +24,7 @@ namespace api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> LoginUser(UserDto userDto)
+        public async Task<ActionResult<String>> LoginUser(UserDto userDto)
         {
             try
             {
