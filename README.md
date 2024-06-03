@@ -82,8 +82,4 @@ After installation, you can use the platform by registering as either a patient 
 ## Contributing
 
 We welcome contributions to Health Hub! Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
 ---
