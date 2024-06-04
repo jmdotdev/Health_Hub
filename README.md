@@ -1,7 +1,7 @@
 ---
 # Health Hub
 
-Health Hub is a comprehensive healthcare platform designed to bridge the gap between patients and doctors. Health Hub facilitates easy appointment scheduling, maintains detailed patient medical records, offers a Q&A platform for immediate queries, and manages medication lists along with timely notifications. Built with Angular for the frontend, .NET 7 for the backend, and MSSQL for database management, Health Hub aims to streamline the healthcare process for both patients and medical professionals.
+Health Hub is a comprehensive healthcare platform designed to bridge the gap between patients and doctors. It facilitates easy appointment scheduling, maintains detailed patient medical records, offers a Q&A platform for immediate queries, and manages medication lists along with timely notifications. Built with Angular for the frontend, .NET 7 for the backend, and MSSQL for database management, Health Hub aims to streamline the healthcare process for both patients and medical professionals.
 
 ## Features
 
