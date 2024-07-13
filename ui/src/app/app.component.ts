@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Route, Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { DashboardComponent } from "./components/dashboard/dashboard.component";
@@ -15,6 +15,23 @@ import { PatientComponent } from "./components/patients/patient/patient.componen
     styleUrl: './app.component.scss',
     imports: [CommonModule, RouterOutlet, ButtonModule, SidenavComponent, DashboardComponent, AppointmentsComponent, PatientsComponent, PatientComponent]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  showSideNav: boolean = true;
   title = 'Health-Hub';
+
+  constructor ( private router: Router) {}
+  ngOnInit() {
+    this.showNav();
+  }
+  
+  showNav(){
+    this.router.events.subscribe((event)=>{
+      if (event instanceof NavigationEnd) {
+        this.showSideNav = !['/', '/register'].includes(event.urlAfterRedirects);
+      }
+    });
+  }
+  
+
 }
