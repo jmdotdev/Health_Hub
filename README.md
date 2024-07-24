@@ -78,8 +78,4 @@ dotnet ef database update
 ### Usage
 
 After installation, you can use the platform by registering as either a patient or a doctor. Patients can book appointments, view their medical records, ask questions, and track their medications. Doctors can manage appointments, answer questions, and access patient records.
-
-## Contributing
-
-We welcome contributions to Health Hub! Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
 ---
