@@ -1,0 +1,95 @@
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Billing & payments</h1>
+    <div class="text-[13px] text-muted-foreground">Today: KSh 46,900 collected · KSh 38,400 outstanding across 9 invoices</div>
+  </div>
+  <div class="flex gap-2">
+    <button type="button" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+      Record payment
+    </button>
+    <button
+      type="button"
+      class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+    >
+      New invoice
+    </button>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 items-start gap-3.5 lg:grid-cols-[1.25fr_1fr]">
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex gap-3.5 overflow-x-auto border-b border-border-soft px-3.5 py-2.5 text-[13px]">
+      <span class="-mb-[11px] cursor-pointer border-b-2 border-primary pb-2.5 font-semibold whitespace-nowrap text-accent-foreground">All invoices</span>
+      <span class="cursor-pointer whitespace-nowrap text-muted-foreground">Outstanding · 9</span>
+      <span class="cursor-pointer whitespace-nowrap text-muted-foreground">Overdue · 3</span>
+      <span class="cursor-pointer whitespace-nowrap text-muted-foreground">Paid today · 14</span>
+    </div>
+    <app-data-table [columns]="columns" [rows]="billing.invoices()" minWidth="620px" [bordered]="false">
+      <ng-template appCell="balance" let-row>
+        <span class="font-mono font-semibold" [class]="row.balance === 'KSh 0' ? 'text-muted-foreground' : 'text-danger'">{{
+          row.balance
+        }}</span>
+      </ng-template>
+      <ng-template appCell="status" let-row>
+        <app-status-badge [tone]="$any(statusTone)[row.status]">{{ row.status }}</app-status-badge>
+      </ng-template>
+    </app-data-table>
+  </section>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+      <div>
+        <div class="text-[14px] font-semibold">Invoice {{ billing.selectedInvoiceNo() }}</div>
+        <div class="mt-0.5 text-[12.5px] text-muted-foreground">Mary Wanjiku · PT-10482 · 19 Aug 2026</div>
+      </div>
+      <app-status-badge tone="warning">Partially paid</app-status-badge>
+    </div>
+
+    <div class="px-4">
+      <div class="grid grid-cols-[1fr_46px_96px] gap-2.5 border-b border-border-soft py-2.5 text-[11px] tracking-wide text-muted-foreground uppercase">
+        <div>Item</div>
+        <div class="text-right">Qty</div>
+        <div class="text-right">Amount</div>
+      </div>
+      @for (line of billing.selectedLines(); track line.name) {
+        <div class="grid grid-cols-[1fr_46px_96px] gap-2.5 border-b border-border-soft py-2.5 text-[13px] last:border-b-0">
+          <div>
+            <div>{{ line.name }}</div>
+            <div class="mt-px text-[11.5px] text-text-subtle">{{ line.category }}</div>
+          </div>
+          <div class="text-right font-mono text-secondary-foreground">{{ line.qty }}</div>
+          <div class="text-right font-mono">{{ line.amount }}</div>
+        </div>
+      }
+    </div>
+
+    <div class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 border-t border-border-soft px-4 py-3 text-[13px]">
+      <div class="text-muted-foreground">Subtotal</div>
+      <div class="text-right font-mono">KSh 6,400</div>
+      <div class="text-muted-foreground">Discount (NHIF)</div>
+      <div class="text-right font-mono text-success">− KSh 1,200</div>
+      <div class="text-muted-foreground">Total</div>
+      <div class="text-right font-mono font-semibold">KSh 5,200</div>
+      <div class="text-muted-foreground">Amount paid · M-Pesa 09:41</div>
+      <div class="text-right font-mono">KSh 3,000</div>
+      <div class="border-t border-border pt-2.5 font-semibold">Outstanding</div>
+      <div class="border-t border-border pt-2.5 text-right font-mono text-[15px] font-semibold text-danger">
+        {{ billing.invoices()[0].balance === 'KSh 0' ? 'KSh 0' : 'KSh 2,200' }}
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-2 border-t border-border-soft p-4">
+      <button
+        type="button"
+        (click)="recordPayment()"
+        class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+      >
+        Record payment
+      </button>
+      <button type="button" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+        Print receipt
+      </button>
+      <button type="button" class="ml-auto flex h-[34px] items-center whitespace-nowrap text-[13px] text-destructive">Void invoice</button>
+    </div>
+  </section>
+</div>

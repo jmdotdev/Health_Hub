@@ -1,0 +1,141 @@
+<div class="max-w-[840px]">
+  <a routerLink="/patients" class="mb-2.5 inline-block text-[12.5px] text-muted-foreground hover:underline"
+    >← Cancel and return to patients</a
+  >
+  <h1 class="mb-1 text-[21px] font-semibold">Register patient</h1>
+  <div class="mb-4 text-[13px] text-muted-foreground">
+    Step 1 of 3 · Personal details. Medical details can be completed by the nurse at triage.
+  </div>
+
+  <div class="mb-4 flex gap-2">
+    <div class="h-[3px] flex-1 rounded-full bg-primary"></div>
+    <div class="h-[3px] flex-1 rounded-full bg-border"></div>
+    <div class="h-[3px] flex-1 rounded-full bg-border"></div>
+  </div>
+
+  <section class="mb-3.5 rounded-[9px] border border-border bg-card">
+    <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Personal information</div>
+    <div class="grid grid-cols-1 gap-3.5 p-4 sm:grid-cols-2">
+      <app-form-field label="First name" [required]="true">
+        <input #firstName [class]="fieldClass" placeholder="Faith" />
+      </app-form-field>
+      <app-form-field label="Last name" [required]="true">
+        <input #lastName [class]="fieldClass" placeholder="Cherono" />
+      </app-form-field>
+      <app-form-field label="Date of birth" [required]="true">
+        <input [class]="fieldClass" placeholder="DD / MM / YYYY" />
+      </app-form-field>
+      <div>
+        <span class="mb-1.5 block text-[12.5px] text-secondary-foreground">Gender</span>
+        <div class="flex gap-1.5">
+          <span class="flex h-9 flex-1 items-center justify-center rounded-md border border-primary bg-accent text-[13px] font-medium text-accent-foreground"
+            >Female</span
+          >
+          <span class="flex h-9 flex-1 items-center justify-center rounded-md border border-input text-[13px]">Male</span>
+          <span class="flex h-9 flex-1 items-center justify-center rounded-md border border-input text-[13px]">Other</span>
+        </div>
+      </div>
+      <app-form-field label="Phone" [required]="true">
+        <input [class]="fieldClass" placeholder="+254 7__ ___ ___" />
+      </app-form-field>
+      <app-form-field label="Email" hint="optional">
+        <input [class]="fieldClass" placeholder="name@example.com" />
+      </app-form-field>
+      <app-form-field label="National ID / passport">
+        <input [class]="fieldClass" placeholder="29184756" />
+      </app-form-field>
+      <app-form-field label="Insurance / payer">
+        <select [class]="fieldClass">
+          <option>Cash</option>
+          <option>NHIF</option>
+          <option>Private insurance</option>
+          <option>Corporate</option>
+        </select>
+      </app-form-field>
+    </div>
+  </section>
+
+  <section class="mb-3.5 rounded-[9px] border border-border bg-card">
+    <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Contact & next of kin</div>
+    <div class="grid grid-cols-1 gap-3.5 p-4 sm:grid-cols-2">
+      <app-form-field label="Address" [span2]="true">
+        <input [class]="fieldClass" placeholder="Estate, street, town" />
+      </app-form-field>
+      <app-form-field label="Emergency contact">
+        <input [class]="fieldClass" placeholder="Full name" />
+      </app-form-field>
+      <app-form-field label="Relationship">
+        <select [class]="fieldClass">
+          <option>Spouse</option>
+          <option>Parent</option>
+          <option>Sibling</option>
+          <option>Child</option>
+          <option>Other</option>
+        </select>
+      </app-form-field>
+      <app-form-field label="Emergency phone">
+        <input [class]="fieldClass" placeholder="+254 7__ ___ ___" />
+      </app-form-field>
+    </div>
+  </section>
+
+  <section class="mb-4 rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+      <span class="text-[14px] font-semibold">Safety information</span>
+      <span class="text-[12px] text-muted-foreground">Ask the patient — do not guess</span>
+    </div>
+    <div class="grid grid-cols-1 gap-3.5 p-4 sm:grid-cols-2">
+      <div class="sm:col-span-2">
+        <span class="mb-1.5 block text-[12.5px] text-secondary-foreground">Known allergies</span>
+        <div class="mb-1.5 flex flex-wrap gap-1.5">
+          <span class="rounded-md border border-danger-border bg-danger-bg px-2.5 py-1 text-[12.5px] text-danger">Penicillin ×</span>
+          <span class="cursor-pointer rounded-md border border-dashed border-input px-2.5 py-1 text-[12.5px] text-muted-foreground"
+            >+ Add allergy</span
+          >
+          <span class="cursor-pointer rounded-md border border-border px-2.5 py-1 text-[12.5px] text-secondary-foreground"
+            >No known allergies</span
+          >
+        </div>
+      </div>
+      <app-form-field label="Blood group">
+        <select [class]="fieldClass">
+          <option>Unknown</option>
+          <option>O+</option>
+          <option>O−</option>
+          <option>A+</option>
+          <option>B+</option>
+          <option>AB+</option>
+        </select>
+      </app-form-field>
+      <app-form-field label="Existing conditions">
+        <input [class]="fieldClass" placeholder="e.g. asthma, hypertension" />
+      </app-form-field>
+      <app-form-field label="Current medications" hint="optional" [span2]="true">
+        <textarea
+          [class]="fieldClass"
+          class="!h-[62px] resize-y py-2"
+          placeholder="Medication, dose and frequency — one per line"
+        ></textarea>
+      </app-form-field>
+    </div>
+  </section>
+
+  <div class="flex flex-wrap items-center gap-2.5">
+    <button
+      type="button"
+      (click)="save(true)"
+      class="flex h-9 items-center whitespace-nowrap rounded-[7px] bg-primary px-3.5 text-[13.5px] font-medium text-primary-foreground hover:bg-primary-hover"
+    >
+      Save and add to queue
+    </button>
+    <button
+      type="button"
+      (click)="save(false)"
+      class="flex h-9 items-center whitespace-nowrap rounded-[7px] border border-input px-3.5 text-[13.5px] font-medium hover:bg-muted"
+    >
+      Save only
+    </button>
+    <a routerLink="/patients" class="flex h-9 items-center whitespace-nowrap text-[13.5px] text-muted-foreground">Cancel</a>
+    <div class="ml-auto text-[12.5px] text-muted-foreground">Draft saved automatically</div>
+  </div>
+</div>

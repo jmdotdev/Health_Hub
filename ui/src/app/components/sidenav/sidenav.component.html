@@ -1,22 +1,144 @@
-<div class="sideNav">
-   <div class="header">
-    <h2>Health Hub</h2>
-   </div>
-   <div class="links">
-     <ul>
-        <li routerLink = "/"  routerLinkActive="active" ariaCurrentWhenActive="page"><i class="pi pi-th-large"></i>Dashboard</li>
-        <li routerLink = "/appointments"  routerLinkActive="active" ariaCurrentWhenActive="page"><i class="pi pi-calendar-plus"></i>Appointments</li>
-        <li routerLink = "/patients"  routerLinkActive="active" ariaCurrentWhenActive="page"><i class="pi pi-users"></i>Patients</li>
-        <li><i class="pi pi-calendar"></i>Schedule</li>
-        <li><i class="pi pi-book"></i>Documents</li>
-        <li><i class="pi pi-briefcase"></i>Medication</li>
-     </ul>
-   </div>
-   <div class="footer">
-      <ul>
-        <li><i class="pi pi-bell"></i>Notifications</li>
-        <li><i class="pi pi-cog"></i>Settings</li>
-        <li><i class="pi pi-user"></i>Profile</li>
-      </ul>
-   </div>
-</div>
+<aside
+  class="fixed inset-y-0 left-0 z-50 flex flex-none flex-col border-r border-border bg-sidebar transition-[width,transform] duration-150 ease-out lg:static lg:translate-x-0"
+  [class]="widthClass() + ' ' + (mobileOpen() ? 'translate-x-0' : '-translate-x-full')"
+>
+  <div class="flex h-[57px] flex-none items-center gap-2.5 border-b border-border-soft px-3.5">
+    <div class="flex size-[26px] flex-none items-center justify-center rounded-[7px] bg-primary">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2">
+        <path d="M8 3.5v9M3.5 8h9" />
+      </svg>
+    </div>
+    @if (!collapsed()) {
+      <span class="text-[15px] font-semibold tracking-tight">Healthub</span>
+    }
+    <button
+      type="button"
+      class="ml-auto flex-none text-muted-foreground lg:hidden"
+      (click)="closeMobile()"
+      aria-label="Close menu"
+    >
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M3 3l10 10M13 3L3 13" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex flex-1 flex-col gap-px overflow-y-auto p-2">
+    @for (item of navItems; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-accent text-accent-foreground font-semibold"
+        (click)="closeMobile()"
+        class="flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13.5px] font-normal text-secondary-foreground hover:bg-muted"
+      >
+        <span class="flex-none">
+          @switch (item.icon) {
+            @case ('grid') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="5" height="5" rx="1" /><rect x="9" y="2" width="5" height="5" rx="1" />
+                <rect x="2" y="9" width="5" height="5" rx="1" /><rect x="9" y="9" width="5" height="5" rx="1" />
+              </svg>
+            }
+            @case ('patients') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="8" cy="6" r="2.6" /><path d="M2.8 14c1-2.5 2.9-3.7 5.2-3.7s4.2 1.2 5.2 3.7" />
+              </svg>
+            }
+            @case ('calendar') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3.2" width="12" height="10.8" rx="1.5" /><path d="M2 6.4h12M5.4 1.8v2.4M10.6 1.8v2.4" />
+              </svg>
+            }
+            @case ('queue') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M6 4h8M6 8h8M6 12h8" />
+                <circle cx="2.8" cy="4" r="1.1" fill="currentColor" stroke="none" />
+                <circle cx="2.8" cy="8" r="1.1" fill="currentColor" stroke="none" />
+                <circle cx="2.8" cy="12" r="1.1" fill="currentColor" stroke="none" />
+              </svg>
+            }
+            @case ('consultation') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3.5 2h6.2L13 5.3V14H3.5z" /><path d="M6 8.4h4.5M6 11h3" />
+              </svg>
+            }
+            @case ('records') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path
+                  d="M2 4.5A1.5 1.5 0 013.5 3h2.7l1.3 1.6h5A1.5 1.5 0 0114 6.1V12a1.5 1.5 0 01-1.5 1.5h-9A1.5 1.5 0 012 12z"
+                />
+              </svg>
+            }
+            @case ('prescription') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="1.6" y="5.4" width="12.8" height="5.2" rx="2.6" /><path d="M8 5.6v4.8" />
+              </svg>
+            }
+            @case ('billing') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.5" /><path d="M1.8 6.6h12.4M4.4 9.8h2.8" />
+              </svg>
+            }
+            @case ('reports') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2.4 13.6V9.4M6.8 13.6V4.6M11.2 13.6V7.4" />
+              </svg>
+            }
+            @case ('staff') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="6" cy="6" r="2.3" /><path d="M1.8 13.4c.8-2.2 2.3-3.3 4.2-3.3s3.4 1.1 4.2 3.3" />
+                <path d="M10.6 4.2a2.3 2.3 0 010 4.2" />
+              </svg>
+            }
+            @case ('inventory') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2 5.4L8 2.4l6 3v5.2l-6 3-6-3z" /><path d="M2 5.4l6 3 6-3M8 8.4v6" />
+              </svg>
+            }
+            @case ('settings') {
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="8" cy="8" r="2.2" /><circle cx="8" cy="8" r="5.6" />
+              </svg>
+            }
+          }
+        </span>
+        @if (!collapsed()) {
+          <span class="min-w-0 flex-1 truncate">{{ item.label }}</span>
+          @if (item.badge) {
+            <span class="flex-none rounded-full bg-warning-bg px-1.5 py-px text-[11px] font-semibold text-warning">
+              {{ item.badge() }}
+            </span>
+          }
+        }
+      </a>
+    }
+  </nav>
+
+  <div class="flex-none border-t border-border-soft p-2.5">
+    <div class="flex items-center gap-2 rounded-md p-1.5 hover:bg-muted">
+      <div
+        class="flex size-7 flex-none items-center justify-center rounded-full bg-accent text-[11.5px] font-semibold text-accent-foreground"
+      >
+        SM
+      </div>
+      @if (!collapsed()) {
+        <div class="min-w-0 flex-1">
+          <div class="truncate text-[13px] font-medium">Sarah Mumbi</div>
+          <div class="text-[11.5px] text-muted-foreground">Receptionist · Front desk</div>
+        </div>
+        <span class="flex-none text-[11px] text-text-subtle">Log out</span>
+      }
+    </div>
+    <button
+      type="button"
+      class="mt-1.5 hidden w-full items-center justify-center gap-1.5 rounded-md border border-border-soft py-1.5 text-[11.5px] text-muted-foreground hover:bg-muted lg:flex"
+      (click)="toggleCollapse()"
+    >
+      {{ collapsed() ? '»' : '« Collapse sidebar' }}
+    </button>
+  </div>
+</aside>
+
+@if (mobileOpen()) {
+  <div class="fixed inset-0 z-40 bg-black/30 lg:hidden" (click)="closeMobile()"></div>
+}

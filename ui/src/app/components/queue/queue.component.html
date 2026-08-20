@@ -1,0 +1,110 @@
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Queue & walk-ins</h1>
+    <div class="text-[13px] text-muted-foreground">Live · updated a moment ago · average wait 21 minutes today</div>
+  </div>
+  <a
+    routerLink="/queue/walk-in"
+    class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+    >Add walk-in</a
+  >
+</div>
+
+<div class="grid grid-cols-1 items-start gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-3.5 py-2.5">
+      <span class="text-[13px] font-semibold">Waiting</span>
+      <span class="rounded-full bg-warning-bg px-2 py-px text-[11.5px] font-semibold text-warning">{{ queue.waiting().length }}</span>
+    </div>
+    <div class="flex flex-col gap-2 p-2.5">
+      @for (p of queue.waiting(); track p.name) {
+        <div class="rounded-[7px] border border-border border-l-[3px] p-2.5" [class]="priorityAccentClass(p.priority)">
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="text-[13.5px] font-semibold">{{ p.name }}</span>
+            <span class="font-mono text-[12.5px] font-semibold" [class]="waitTextClass(p.waitMinutes)">{{ p.waitMinutes }}m</span>
+          </div>
+          <div class="mt-0.5 text-[12px] text-muted-foreground">{{ p.reason }}</div>
+          <div class="mt-1 text-[11.5px] text-text-subtle">Arrived {{ p.arrived }} · {{ p.doctor }}</div>
+          <div class="mt-2 flex items-center gap-1.5">
+            <app-status-badge [tone]="priorityTone(p.priority)">{{ p.priority }}</app-status-badge>
+            <button
+              type="button"
+              (click)="call(p.name)"
+              class="ml-auto rounded-[5px] bg-primary px-2.5 py-1 text-[12px] font-medium text-primary-foreground"
+            >
+              Call
+            </button>
+            <span class="cursor-pointer rounded-[5px] border border-border px-1.5 py-1 text-[12px] text-muted-foreground">···</span>
+          </div>
+        </div>
+      } @empty {
+        <div class="py-6 text-center text-[13px] text-muted-foreground">No one waiting.</div>
+      }
+    </div>
+  </section>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-3.5 py-2.5">
+      <span class="text-[13px] font-semibold">Called</span>
+      <span class="rounded-full bg-secondary px-2 py-px text-[11.5px] font-semibold text-secondary-foreground">{{ queue.called().length }}</span>
+    </div>
+    <div class="flex flex-col gap-2 p-2.5">
+      @for (p of queue.called(); track p.name) {
+        <div class="rounded-[7px] border border-border border-l-[3px] border-l-primary p-2.5">
+          <div class="flex items-baseline justify-between">
+            <span class="text-[13.5px] font-semibold">{{ p.name }}</span>
+            <span class="font-mono text-[12.5px] text-muted-foreground">{{ p.waitMinutes }}m</span>
+          </div>
+          <div class="mt-0.5 text-[12px] text-muted-foreground">{{ p.reason }}</div>
+          <div class="mt-1 text-[11.5px] text-text-subtle">Called to {{ p.room }} · {{ p.doctor }}</div>
+          <div class="mt-2 flex gap-1.5">
+            <a
+              routerLink="/consultation"
+              class="rounded-[5px] bg-primary px-2.5 py-1 text-[12px] font-medium text-primary-foreground"
+              >Start consultation</a
+            >
+            <span class="cursor-pointer rounded-[5px] border border-border px-2 py-1 text-[12px] text-muted-foreground">No answer</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-3.5 py-2.5">
+      <span class="text-[13px] font-semibold">In consultation</span>
+      <span class="rounded-full bg-accent px-2 py-px text-[11.5px] font-semibold text-accent-foreground">{{ queue.inConsultation().length }}</span>
+    </div>
+    <div class="flex flex-col gap-2 p-2.5">
+      @for (p of queue.inConsultation(); track p.name) {
+        <div class="rounded-[7px] border border-border p-2.5">
+          <div class="flex items-baseline justify-between">
+            <span class="text-[13.5px] font-semibold">{{ p.name }}</span>
+            <span class="font-mono text-[12.5px] text-muted-foreground">{{ p.minutes }}m</span>
+          </div>
+          <div class="mt-0.5 text-[12px] text-muted-foreground">{{ p.reason }} · {{ p.location }}</div>
+          <div class="mt-1 text-[11.5px] text-text-subtle">{{ p.by }}</div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-3.5 py-2.5">
+      <span class="text-[13px] font-semibold">Completed</span>
+      <span class="rounded-full bg-success-bg px-2 py-px text-[11.5px] font-semibold text-success">{{ queue.completedTotal() }}</span>
+    </div>
+    <div class="flex flex-col gap-2 p-2.5">
+      @for (p of queue.completed(); track p.name) {
+        <div class="rounded-[7px] border border-border-soft bg-[#fbfbfc] p-2.5">
+          <div class="flex items-baseline justify-between">
+            <span class="text-[13.5px] font-medium text-secondary-foreground">{{ p.name }}</span>
+            <span class="text-[11.5px]" [class]="'text-' + p.paymentTone">{{ p.paymentLabel }}</span>
+          </div>
+          <div class="mt-0.5 text-[12px] text-text-subtle">Seen {{ p.seenAt }} · waited {{ p.waitedMinutes }}m</div>
+        </div>
+      }
+      <div class="cursor-pointer p-1 text-center text-[12.5px] text-primary hover:underline">Show 9 more</div>
+    </div>
+  </section>
+</div>

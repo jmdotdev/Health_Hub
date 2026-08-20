@@ -1,8 +1,21 @@
-<div class="main">
-    <div class="sidenav" *ngIf="showSideNav">
-        <app-sidenav></app-sidenav>
-    </div>
-<div class="core">
-    <router-outlet></router-outlet>
+<div class="flex h-screen w-full overflow-hidden bg-background">
+  @if (showShell()) {
+    <app-sidenav
+      [collapsed]="sidebarCollapsed()"
+      [mobileOpen]="mobileNavOpen()"
+      (collapsedChange)="sidebarCollapsed.set($event)"
+      (mobileOpenChange)="mobileNavOpen.set($event)"
+    />
+  }
+  <div class="flex min-w-0 flex-1 flex-col">
+    @if (showShell()) {
+      <app-topbar (openMobileNav)="mobileNavOpen.set(true)" />
+    }
+    <main class="flex-1 overflow-y-auto" [class]="showShell() ? 'px-4 pt-4 pb-10 sm:px-5 sm:pt-[22px] lg:px-6' : ''">
+      <div [class]="showShell() ? 'mx-auto max-w-[1320px]' : 'h-full'">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
 </div>
-</div>
+<z-sonner position="bottom-center" [richColors]="true" />

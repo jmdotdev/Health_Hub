@@ -1,1 +1,36 @@
-<p>login works!</p>
+<div class="flex min-h-screen items-center justify-center bg-background px-4">
+  <div class="w-full max-w-[380px]">
+    <div class="mb-6 flex items-center justify-center gap-2.5">
+      <div class="flex size-[30px] items-center justify-center rounded-[8px] bg-primary">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2">
+          <path d="M8 3.5v9M3.5 8h9" />
+        </svg>
+      </div>
+      <span class="text-[17px] font-semibold tracking-tight">Healthub</span>
+    </div>
+
+    <section class="rounded-[9px] border border-border bg-card p-6">
+      <h1 class="mb-1 text-[19px] font-semibold">Sign in</h1>
+      <div class="mb-5 text-[13px] text-muted-foreground">Use your clinic account to access Healthub.</div>
+
+      <form class="flex flex-col gap-3.5" (submit)="$event.preventDefault(); signIn()">
+        <app-form-field label="Email">
+          <input type="email" [class]="fieldClass" placeholder="you@riverside.co.ke" />
+        </app-form-field>
+        <app-form-field label="Password">
+          <input type="password" [class]="fieldClass" placeholder="••••••••" />
+        </app-form-field>
+        <button
+          type="submit"
+          class="mt-1 flex h-9 items-center justify-center rounded-[7px] bg-primary text-[13.5px] font-medium text-primary-foreground hover:bg-primary-hover"
+        >
+          Sign in
+        </button>
+      </form>
+    </section>
+
+    <div class="mt-4 text-center text-[13px] text-muted-foreground">
+      New to Healthub? <a routerLink="/register" class="text-primary hover:underline">Create an account</a>
+    </div>
+  </div>
+</div>

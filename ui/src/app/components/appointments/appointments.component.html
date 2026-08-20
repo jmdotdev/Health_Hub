@@ -1,36 +1,108 @@
-<div class="appointments">
-    <div class="main">
-       <div class="appointment-section">
-        <div class="header">
-            <div class="card flex flex-wrap justify-content-center gap-3">
-              <input class="search" type="text" placeholder="search" />
-            </div>
-    
-            <div class="icons">
-              <i class="pi pi-bell"></i>
-              <i class="pi pi-comment"></i>
-            </div>
-        </div>
-        <div class="table-card">
-            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template pTemplate="header">
-                    <tr style="height: 30px;">
-                        <th>Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-product>
-                    <tr style="height: 50px;padding: 0 5px;">
-                        <td>{{ product.code }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.quantity }}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-       </div>
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Appointments</h1>
+    <div class="text-[13px] text-muted-foreground">Wednesday, 19 August 2026 · 18 booked · 3 slots free</div>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    <div class="flex h-[34px] overflow-hidden rounded-[7px] border border-input">
+      <button
+        type="button"
+        (click)="view.set('day')"
+        class="px-3 text-[13px] font-medium"
+        [class]="view() === 'day' ? 'bg-accent text-accent-foreground' : 'bg-card text-secondary-foreground'"
+      >
+        Day
+      </button>
+      <button
+        type="button"
+        (click)="view.set('list')"
+        class="border-l border-input px-3 text-[13px] font-medium"
+        [class]="view() === 'list' ? 'bg-accent text-accent-foreground' : 'bg-card text-secondary-foreground'"
+      >
+        List
+      </button>
     </div>
+    <button
+      type="button"
+      class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+    >
+      New appointment
+    </button>
+  </div>
 </div>
+
+@if (view() === 'day') {
+  <section class="overflow-hidden rounded-[9px] border border-border bg-card">
+    <div class="flex items-center gap-3 overflow-x-auto border-b border-border-soft px-3.5 py-2.5">
+      <span class="flex size-7 flex-none cursor-pointer items-center justify-center rounded-md border border-input text-[13px]">‹</span>
+      <span class="whitespace-nowrap text-[13.5px] font-semibold">Wed 19 Aug</span>
+      <span class="flex size-7 flex-none cursor-pointer items-center justify-center rounded-md border border-input text-[13px]">›</span>
+      <span class="cursor-pointer whitespace-nowrap text-[12.5px] text-primary">Today</span>
+      <span class="ml-auto hidden whitespace-nowrap text-[12.5px] text-muted-foreground sm:inline">Week · Month</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <div class="grid min-w-[560px] grid-cols-[64px_repeat(3,1fr)] sm:grid-cols-[72px_repeat(3,1fr)]">
+        <div class="border-r border-border-soft"></div>
+        @for (doc of appointments.doctors; track doc.name) {
+          <div class="border-r border-b border-border-soft px-2.5 py-2.5 text-[13px] font-semibold last:border-r-0">
+            {{ doc.name }} <span class="font-normal text-muted-foreground">· {{ doc.specialty }}</span>
+          </div>
+        }
+
+        @for (slot of appointments.day(); track slot.time) {
+          <div class="border-r border-b border-border-soft px-2.5 py-2 font-mono text-[12px] text-text-subtle">{{ slot.time }}</div>
+          @for (entry of slot.columns; track $index) {
+            <div class="min-h-[46px] border-r border-b border-border-soft p-1.5 last:border-r-0">
+              @if (entry) {
+                <div
+                  class="h-full rounded-md border p-1.5"
+                  [class]="
+                    appointmentStatus[entry.status].tone === 'primary'
+                      ? 'bg-accent border-[#cfe6ee] text-accent-foreground'
+                      : appointmentStatus[entry.status].tone === 'success'
+                        ? 'bg-success-bg border-success-border text-success'
+                        : appointmentStatus[entry.status].tone === 'danger'
+                          ? 'bg-danger-bg border-danger-border text-danger'
+                          : 'bg-info-bg border-info-border text-info'
+                  "
+                >
+                  <div class="text-[12.5px] font-medium">{{ entry.patient }}</div>
+                  <div class="text-[11.5px] opacity-80">{{ entry.type }}</div>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-4 border-t border-border-soft px-3.5 py-2.5 text-[12px] text-muted-foreground">
+      <span class="flex items-center gap-1.5"
+        ><span class="size-2.5 rounded-[3px] border border-info-border bg-info-bg"></span>Confirmed</span
+      >
+      <span class="flex items-center gap-1.5"
+        ><span class="size-2.5 rounded-[3px] border border-[#cfe6ee] bg-accent"></span>In consultation</span
+      >
+      <span class="flex items-center gap-1.5"
+        ><span class="size-2.5 rounded-[3px] border border-success-border bg-success-bg"></span>Completed</span
+      >
+      <span class="flex items-center gap-1.5"
+        ><span class="size-2.5 rounded-[3px] border border-danger-border bg-danger-bg"></span>Cancelled / no-show</span
+      >
+    </div>
+  </section>
+} @else {
+  <app-data-table [columns]="listColumns" [rows]="appointments.list()" minWidth="900px">
+    <ng-template appCell="status" let-row>
+      @let meta = $any(appointmentStatus)[row.status];
+      <app-status-badge [tone]="meta.tone">{{ meta.label }}</app-status-badge>
+    </ng-template>
+    <ng-template appCell="actions" let-row>
+      <div class="flex gap-2.5 text-[12.5px]">
+        <span class="cursor-pointer text-primary hover:underline">{{ row.primaryAction }}</span>
+        <span class="cursor-pointer text-muted-foreground hover:underline">Reschedule</span>
+      </div>
+    </ng-template>
+  </app-data-table>
+}

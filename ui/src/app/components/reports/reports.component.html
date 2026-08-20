@@ -1,0 +1,75 @@
+<div class="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Reports</h1>
+    <div class="text-[13px] text-muted-foreground">1 – 19 August 2026 · all doctors · all services</div>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <select class="h-[34px] rounded-[7px] border border-input bg-card px-2 text-[13px]">
+      <option>This month</option>
+      <option>Today</option>
+      <option>Last 7 days</option>
+      <option>Custom range</option>
+    </select>
+    <select class="h-[34px] rounded-[7px] border border-input bg-card px-2 text-[13px]">
+      <option>All doctors</option>
+      <option>Dr. Kamau</option>
+      <option>Dr. Otieno</option>
+      <option>Dr. Njoroge</option>
+    </select>
+    <button type="button" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+      Export
+    </button>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 items-start gap-3.5 lg:grid-cols-[1.4fr_1fr]">
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-baseline justify-between border-b border-border-soft px-4 py-3">
+      <span class="text-[14px] font-semibold">Patient visits per day</span>
+      <span class="text-[12.5px] text-muted-foreground">Average 41 · peak Thu 14 Aug (58)</span>
+    </div>
+    <div class="p-4">
+      <div class="flex h-[150px] items-end gap-1">
+        @for (b of reports.visitBars(); track b.day) {
+          <div class="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+            <div
+              class="w-full rounded-t-[3px]"
+              [style.height.%]="b.heightPct"
+              [class]="b.peak ? 'bg-accent-foreground' : 'bg-primary/35'"
+            ></div>
+            <div class="text-[10px] text-text-subtle">{{ b.day }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Revenue by service</div>
+    <div class="p-4">
+      @for (r of reports.revenue(); track r.label) {
+        <div class="mb-3">
+          <div class="mb-1.5 flex justify-between text-[13px]">
+            <span>{{ r.label }}</span>
+            <span class="font-mono text-secondary-foreground">{{ r.amount }}</span>
+          </div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-secondary">
+            <div class="h-full bg-primary" [style.width]="r.pct"></div>
+          </div>
+        </div>
+      }
+      <div class="flex justify-between border-t border-border-soft pt-2.5 text-[13.5px] font-semibold">
+        <span>Total collected</span><span class="font-mono">{{ reports.totalCollected }}</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="mt-3.5 rounded-[9px] border border-border bg-card">
+  <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Doctor activity</div>
+  <app-data-table [columns]="doctorColumns" [rows]="reports.doctorActivity()" minWidth="640px" [bordered]="false">
+    <ng-template appCell="avgWait" let-row>
+      <span [class]="row.waitFlagged ? 'text-warning' : ''">{{ row.avgWait }}</span>
+    </ng-template>
+  </app-data-table>
+</section>

@@ -1,37 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NavigationEnd, Route, Router, RouterOutlet } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { SidenavComponent } from "./components/sidenav/sidenav.component";
-import { DashboardComponent } from "./components/dashboard/dashboard.component";
-import { AppointmentsComponent } from "./components/appointments/appointments.component";
-import { PatientsComponent } from "./components/patients/patients.component";
-import { PatientComponent } from "./components/patients/patient/patient.component";
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { TopbarComponent } from './components/layout/topbar/topbar.component';
+import { ZardSonnerComponent } from '@/shared/components/sonner';
+
+const AUTH_ROUTES = ['/', '/register'];
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss',
-    imports: [CommonModule, RouterOutlet, ButtonModule, SidenavComponent, DashboardComponent, AppointmentsComponent, PatientsComponent, PatientComponent]
+  selector: 'app-root',
+  imports: [RouterOutlet, SidenavComponent, TopbarComponent, ZardSonnerComponent],
+  templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
+  private readonly router = inject(Router);
 
-  showSideNav: boolean = true;
-  title = 'Health-Hub';
+  protected readonly sidebarCollapsed = signal(false);
+  protected readonly mobileNavOpen = signal(false);
 
-  constructor ( private router: Router) {}
-  ngOnInit() {
-    this.showNav();
-  }
-  
-  showNav(){
-    this.router.events.subscribe((event)=>{
-      if (event instanceof NavigationEnd) {
-        this.showSideNav = !['/', '/register'].includes(event.urlAfterRedirects);
-      }
-    });
-  }
-  
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map(event => event.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
+    { initialValue: this.router.url },
+  );
 
+  protected readonly showShell = computed(() => !AUTH_ROUTES.includes(this.currentUrl()));
 }

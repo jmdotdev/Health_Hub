@@ -1,0 +1,26 @@
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Staff</h1>
+    <div class="text-[13px] text-muted-foreground">18 members · {{ staff.onDutyCount() }} on duty now</div>
+  </div>
+  <button
+    type="button"
+    class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+  >
+    Invite staff
+  </button>
+</div>
+
+<app-data-table [columns]="columns" [rows]="staff.list()" minWidth="820px">
+  <ng-template appCell="name" let-row>
+    <div class="flex items-center gap-2.5">
+      <span class="flex size-7 flex-none items-center justify-center rounded-full bg-secondary text-[11px] font-semibold text-secondary-foreground">{{
+        row.initials
+      }}</span>
+      <span class="font-medium">{{ row.name }}</span>
+    </div>
+  </ng-template>
+  <ng-template appCell="status" let-row>
+    <app-status-badge [tone]="$any(statusTone)[row.status]">{{ row.status }}</app-status-badge>
+  </ng-template>
+</app-data-table>

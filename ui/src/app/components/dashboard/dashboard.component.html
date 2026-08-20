@@ -1,112 +1,118 @@
-<div class="dashboard">
-  <div class="main">
-    <div class="left-container">
-      <div class="header">
-        <div class="card flex flex-wrap justify-content-center gap-3">
-          <input class="search" type="text" placeholder="search" />
-        </div>
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Good morning, Sarah</h1>
+    <div class="text-[13px] text-muted-foreground">
+      Wednesday, 19 August 2026 · {{ queue.waitingCount() }} patients waiting · {{ queue.inConsultation().length }} in
+      consultation · 18 appointments today
+    </div>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <a
+      routerLink="/patients/register"
+      class="flex h-[34px] items-center gap-1.5 whitespace-nowrap rounded-[7px] border border-input bg-card px-3 text-[13px] font-medium hover:bg-muted"
+      >Register patient</a
+    >
+    <a
+      routerLink="/appointments"
+      class="flex h-[34px] items-center gap-1.5 whitespace-nowrap rounded-[7px] border border-input bg-card px-3 text-[13px] font-medium hover:bg-muted"
+      >Book appointment</a
+    >
+    <a
+      routerLink="/queue/walk-in"
+      class="flex h-[34px] items-center gap-1.5 whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+      >Add walk-in</a
+    >
+  </div>
+</div>
 
-        <div class="icons">
-          <i class="pi pi-bell"></i>
-          <i class="pi pi-comment"></i>
-        </div>
-      </div>
-      <div class="day">
-        <h5>Today</h5>
-      </div>
-      <div class="cards">
-        <div class="appointment-card">
-          <div class="card-title">
-            <h5>Appointments</h5>
-            <i class="pi pi-ellipsis-v"></i>
-          </div>
-          <div class="body">
-            <h2>25</h2>
-          </div>
-          <div class="footer">
-            <img
-              src="/assets/images/treatment.png"
-              height="80"
-              width="80"
-            />
-          </div>
-        </div>
-        <div class="appointment-card">
-          <div class="card-title">
-            <h5>Hours</h5>
-            <i class="pi pi-ellipsis-v"></i>
-          </div>
-          <div class="body">
-            <h2>1Hr</h2>
-          </div>
-          <div class="footer">
-            <img
-              src="/assets/images/treatment.png"
-              height="80"
-              width="80"
-            />
-          </div>
-        </div>
-        <div class="appointment-card">
-          <div class="card-title">
-            <h5>Surgery</h5>
-            <i class="pi pi-ellipsis-v"></i>
-          </div>
-          <div class="body">
-            <h2>2</h2>
-          </div>
-          <div class="footer">
-            <img
-              src="/assets/images/treatment.png"
-              height="80"
-              width="80"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="table-card">
-        <div class="card-header">
-            <h3>Appointments</h3>
-            <h5 style="color: blue;cursor: pointer;">View All</h5>
-        </div>
-        <p-table
-          [value]="products"
-          [tableStyle]="{ 'min-width': '50rem','margin-top':'20px' }"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Quantity</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-product>
-            <tr>
-              <td>{{ product.code }}</td>
-              <td>{{ product.name }}</td>
-              <td>{{ product.category }}</td>
-              <td>{{ product.quantity }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
+<div
+  class="mb-4 grid grid-cols-2 divide-x divide-y divide-border-soft overflow-hidden rounded-[9px] border border-border bg-card sm:grid-cols-3 sm:divide-y-0 lg:grid-cols-6"
+>
+  <app-stat-card label="Appointments" value="18" />
+  <app-stat-card label="Waiting" [value]="queue.waitingCount().toString()" valueClass="text-warning" />
+  <app-stat-card label="In consultation" [value]="queue.inConsultation().length.toString()" valueClass="text-accent-foreground" />
+  <app-stat-card label="Completed" value="11" />
+  <app-stat-card label="Walk-ins" value="6" />
+  <app-stat-card label="Outstanding" value="KSh 38,400" valueClass="text-danger" />
+</div>
+
+<div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1.55fr_1fr]">
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+      <h2 class="text-[14px] font-semibold">Today's appointments</h2>
+      <a routerLink="/appointments" class="text-[12.5px] text-primary hover:underline">View all</a>
     </div>
-    <div class="right-container">
-      <div class="header">
-        <h5>Upcoming Schedule</h5>
-        <h6 style="color: blue;cursor: pointer;">View All</h6>
+    <app-data-table
+      [columns]="[
+        { key: 'time', header: 'Time', width: '74px', mono: true, cellClass: 'text-secondary-foreground' },
+        { key: 'patient', header: 'Patient', width: '1.5fr', cellClass: 'font-medium' },
+        { key: 'doctor', header: 'Doctor', width: '1.1fr', cellClass: 'text-secondary-foreground' },
+        { key: 'type', header: 'Type', width: '1.1fr', cellClass: 'text-secondary-foreground' },
+        { key: 'status', header: 'Status', width: '118px' },
+        { key: 'action', header: '', width: '90px' },
+      ]"
+      [rows]="todaysAppointments"
+      minWidth="560px"
+      [bordered]="false"
+    >
+      <ng-template appCell="status" let-row>
+        @let meta = $any(appointmentStatus)[row.status];
+        <app-status-badge [tone]="meta.tone">{{ meta.label }}</app-status-badge>
+      </ng-template>
+      <ng-template appCell="action" let-row>
+        <a [routerLink]="primaryRoute(row.status)" class="text-[12.5px] text-primary hover:underline">{{
+          primaryLabel(row.status)
+        }}</a>
+      </ng-template>
+    </app-data-table>
+  </section>
+
+  <div class="flex flex-col gap-4">
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+        <h2 class="text-[14px] font-semibold">Clinic queue</h2>
+        <a routerLink="/queue" class="text-[12.5px] text-primary hover:underline">Manage</a>
       </div>
-        <div class="card">
-            <p-timeline [value]="events">
-                <ng-template pTemplate="content" let-event>
-                    <small class="p-text-secondary">{{ event.status }}</small>
-                </ng-template>
-                <ng-template pTemplate="opposite" let-event>
-                  <small class="p-text-secondary">{{ event.date }}</small>
-                </ng-template>
-            </p-timeline>
+      <div class="border-b border-border-soft px-4 py-3">
+        <div class="mb-2.5 text-[11px] tracking-wide text-muted-foreground uppercase">
+          Waiting · {{ topWaiting.length }} shown
         </div>
-    </div>
+        <div class="flex flex-col gap-2">
+          @for (p of topWaiting; track p.name; let i = $index) {
+            <div class="flex items-center gap-2.5 text-[13px]">
+              <span class="w-5 font-mono text-text-subtle">{{ i + 1 }}</span>
+              <span class="flex-1 truncate font-medium">{{ p.name }}</span>
+              <span class="hidden text-[12px] text-muted-foreground sm:inline">{{ p.reason }}</span>
+              <span class="font-mono text-[12px]" [class]="waitTextClass(p.waitMinutes)">{{ p.waitMinutes }}m</span>
+            </div>
+          }
+        </div>
+      </div>
+      @if (firstInConsultation) {
+        <div class="px-4 py-3">
+          <div class="mb-2.5 text-[11px] tracking-wide text-muted-foreground uppercase">In consultation</div>
+          <div class="flex items-center gap-2.5 text-[13px]">
+            <span class="font-medium">{{ firstInConsultation.by }}</span>
+            <span class="text-text-subtle">→</span>
+            <span class="flex-1 truncate">{{ firstInConsultation.name }}</span>
+            <span class="font-mono text-[12px] text-muted-foreground">{{ firstInConsultation.minutes }}m</span>
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="border-b border-border-soft px-4 py-3">
+        <h2 class="text-[14px] font-semibold">Recent activity</h2>
+      </div>
+      <div class="flex flex-col gap-2.5 px-4 py-3">
+        @for (item of recentActivity; track item.time) {
+          <div class="flex gap-2.5 text-[12.5px]">
+            <span class="w-11 flex-none font-mono text-text-subtle">{{ item.time }}</span>
+            <span class="text-secondary-foreground">{{ item.text }}</span>
+          </div>
+        }
+      </div>
+    </section>
   </div>
 </div>

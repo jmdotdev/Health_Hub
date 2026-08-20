@@ -1,0 +1,12 @@
+<div class="mb-4">
+  <h1 class="mb-1 text-[21px] font-semibold">Medical records</h1>
+  <div class="text-[13px] text-muted-foreground">Search across consultations, diagnoses, lab reports and uploaded documents</div>
+</div>
+
+<app-empty-state
+  icon="search"
+  title="Search a patient to open their records"
+  description="Records are always scoped to one patient. Use the search bar above, or pick from the patient list. Every record you open is written to the audit log."
+  actionLabel="Browse patients"
+  (action)="browsePatients()"
+/>

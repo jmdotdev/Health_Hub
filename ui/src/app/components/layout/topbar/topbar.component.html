@@ -1,0 +1,135 @@
+<header class="flex h-[57px] flex-none items-center gap-3 border-b border-border bg-card px-3 sm:gap-4 sm:px-5">
+  <button
+    type="button"
+    class="flex-none text-secondary-foreground lg:hidden"
+    (click)="openMobileNav.emit()"
+    aria-label="Open menu"
+  >
+    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M2 4h12M2 8h12M2 12h12" />
+    </svg>
+  </button>
+
+  <div class="relative min-w-0 max-w-[520px] flex-1">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="#98a2b3"
+      stroke-width="1.6"
+      class="pointer-events-none absolute left-[11px] top-1/2 -translate-y-1/2"
+    >
+      <circle cx="7" cy="7" r="4.4" /><path d="M10.4 10.4L14 14" />
+    </svg>
+    <input
+      [value]="query()"
+      (input)="onSearchInput($any($event.target).value)"
+      (focus)="openSearch()"
+      placeholder="Search patients, phone, patient IDs..."
+      class="h-[35px] w-full rounded-[7px] border border-input bg-card pl-8 pr-3 text-[13.5px] outline-none focus:border-primary focus:ring-3 focus:ring-primary/10"
+    />
+    @if (searchOpen()) {
+      <div
+        class="absolute top-[41px] left-0 right-0 z-40 overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+      >
+        <div
+          class="flex items-center justify-between border-b border-border-soft px-3 py-2 text-[11px] tracking-wide text-muted-foreground uppercase"
+        >
+          <span>{{ hasQuery() ? results().length + ' patients found' : 'Recently viewed' }}</span>
+          <span class="cursor-pointer text-[11.5px] tracking-normal normal-case" (click)="closePanels()">Esc</span>
+        </div>
+        @for (r of results(); track r.id) {
+          <div
+            (click)="openPatient(r.id)"
+            class="grid cursor-pointer grid-cols-2 items-center gap-1 border-b border-border-soft px-3 py-2.5 last:border-b-0 hover:bg-muted sm:grid-cols-[1.4fr_1fr_1fr_.9fr] sm:gap-3"
+          >
+            <div>
+              <div class="text-[13.5px] font-medium">{{ r.name }}</div>
+              <div class="font-mono text-[11.5px] text-muted-foreground">{{ r.id }}</div>
+            </div>
+            <div class="text-[12.5px] text-secondary-foreground">{{ r.phone }}</div>
+            <div class="hidden text-[12.5px] text-muted-foreground sm:block">DOB {{ r.dob }}</div>
+            <div class="hidden text-right text-[12px] text-muted-foreground sm:block">Last visit {{ r.last }}</div>
+          </div>
+        }
+        @if (noResults()) {
+          <div class="px-4 py-6 text-center">
+            <div class="mb-1 text-[13.5px] font-medium">No patients match "{{ query() }}"</div>
+            <div class="mb-3 text-[12.5px] text-muted-foreground">
+              Check the spelling, or register this person as a new patient.
+            </div>
+            <button
+              type="button"
+              (click)="registerPatient()"
+              class="rounded-md bg-primary px-3 py-1.5 text-[12.5px] font-medium text-primary-foreground hover:bg-primary-hover"
+            >
+              Register patient
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="flex flex-none items-center gap-2">
+    <div
+      class="hidden items-center gap-1.5 whitespace-nowrap rounded-[7px] border border-border px-2.5 py-1.5 text-[12.5px] text-secondary-foreground md:flex"
+    >
+      <span class="size-1.5 rounded-full bg-success"></span>Riverside Clinic · Nairobi
+    </div>
+
+    <button
+      type="button"
+      (click)="toggleNotifications()"
+      class="relative flex size-[35px] flex-none items-center justify-center rounded-[7px] border border-border hover:bg-muted"
+      aria-label="Notifications"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#475467" stroke-width="1.5">
+        <path d="M4 6.6a4 4 0 018 0c0 3 1.1 4.2 1.1 4.2H2.9S4 9.6 4 6.6z" /><path d="M6.6 13a1.6 1.6 0 002.8 0" />
+      </svg>
+      @if (notifications.list().length) {
+        <span
+          class="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground"
+        >
+          {{ notifications.list().length }}
+        </span>
+      }
+    </button>
+
+    <a
+      routerLink="/patients/register"
+      class="flex h-[35px] flex-none items-center gap-1.5 whitespace-nowrap rounded-[7px] bg-primary px-2.5 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover sm:px-3.5"
+    >
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2">
+        <path d="M8 3v10M3 8h10" />
+      </svg>
+      <span class="hidden sm:inline">New patient</span>
+    </a>
+  </div>
+</header>
+
+@if (notifOpen()) {
+  <div
+    class="fixed top-[62px] right-3 z-60 w-[min(344px,calc(100vw-1.5rem))] overflow-hidden rounded-[9px] border border-border bg-card shadow-xl sm:right-5"
+  >
+    <div class="flex items-center justify-between border-b border-border-soft px-3.5 py-2.5">
+      <span class="text-[13.5px] font-semibold">Notifications</span>
+      <span class="cursor-pointer text-[12px] text-muted-foreground" (click)="closePanels()">Close</span>
+    </div>
+    @for (n of notifications.list(); track n.title) {
+      <div class="flex gap-2.5 border-b border-border-soft px-3.5 py-2.5 last:border-b-0">
+        <span class="mt-1.5 size-[7px] flex-none rounded-full" [class]="dotClass(n.tone)"></span>
+        <div class="min-w-0">
+          <div class="mb-0.5 text-[13px] font-medium">{{ n.title }}</div>
+          <div class="text-[12px] text-muted-foreground">{{ n.body }}</div>
+        </div>
+        <div class="ml-auto flex-none text-[11px] whitespace-nowrap text-text-subtle">{{ n.time }}</div>
+      </div>
+    }
+  </div>
+}
+
+@if (panelOpen()) {
+  <div class="fixed inset-0 z-30" (click)="closePanels()"></div>
+}

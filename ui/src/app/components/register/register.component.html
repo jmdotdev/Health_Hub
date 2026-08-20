@@ -1,1 +1,44 @@
-<p>register works!</p>
+<div class="flex min-h-screen items-center justify-center bg-background px-4 py-8">
+  <div class="w-full max-w-[380px]">
+    <div class="mb-6 flex items-center justify-center gap-2.5">
+      <div class="flex size-[30px] items-center justify-center rounded-[8px] bg-primary">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2">
+          <path d="M8 3.5v9M3.5 8h9" />
+        </svg>
+      </div>
+      <span class="text-[17px] font-semibold tracking-tight">Healthub</span>
+    </div>
+
+    <section class="rounded-[9px] border border-border bg-card p-6">
+      <h1 class="mb-1 text-[19px] font-semibold">Create your account</h1>
+      <div class="mb-5 text-[13px] text-muted-foreground">Set up staff access for your clinic.</div>
+
+      <form class="flex flex-col gap-3.5" (submit)="$event.preventDefault(); createAccount()">
+        <div class="grid grid-cols-2 gap-3.5">
+          <app-form-field label="First name">
+            <input [class]="fieldClass" placeholder="Sarah" />
+          </app-form-field>
+          <app-form-field label="Last name">
+            <input [class]="fieldClass" placeholder="Mumbi" />
+          </app-form-field>
+        </div>
+        <app-form-field label="Clinic email">
+          <input type="email" [class]="fieldClass" placeholder="you@riverside.co.ke" />
+        </app-form-field>
+        <app-form-field label="Password">
+          <input type="password" [class]="fieldClass" placeholder="••••••••" />
+        </app-form-field>
+        <button
+          type="submit"
+          class="mt-1 flex h-9 items-center justify-center rounded-[7px] bg-primary text-[13.5px] font-medium text-primary-foreground hover:bg-primary-hover"
+        >
+          Create account
+        </button>
+      </form>
+    </section>
+
+    <div class="mt-4 text-center text-[13px] text-muted-foreground">
+      Already have an account? <a routerLink="/" class="text-primary hover:underline">Sign in</a>
+    </div>
+  </div>
+</div>
