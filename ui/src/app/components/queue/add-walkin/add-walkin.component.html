@@ -1,0 +1,75 @@
+<div class="max-w-[720px]">
+  <a routerLink="/queue" class="mb-2.5 inline-block text-[12.5px] text-muted-foreground hover:underline">← Back to queue</a>
+  <h1 class="mb-1 text-[21px] font-semibold">Add walk-in</h1>
+  <div class="mb-4 text-[13px] text-muted-foreground">Arrival time is recorded automatically as 09:23.</div>
+
+  <section class="rounded-[9px] border border-border bg-card">
+    <div class="border-b border-border-soft p-4">
+      <span class="mb-1.5 block text-[12.5px] text-secondary-foreground">Patient</span>
+      <div class="mb-2.5 flex gap-1.5">
+        <span class="rounded-md border border-primary bg-accent px-2.5 py-1.5 text-[13px] font-medium text-accent-foreground"
+          >Existing patient</span
+        >
+        <a routerLink="/patients/register" class="rounded-md border border-input px-2.5 py-1.5 text-[13px]">New patient</a>
+      </div>
+      <div class="flex items-center gap-3 rounded-[7px] border border-border bg-[#fbfbfc] p-2.5">
+        <div class="flex size-[34px] flex-none items-center justify-center rounded-full bg-accent text-[12px] font-semibold text-accent-foreground">
+          BO
+        </div>
+        <div>
+          <div class="text-[13.5px] font-medium">Brian Otieno</div>
+          <div class="text-[12px] text-muted-foreground">PT-10465 · 27 · +254 720 887 341</div>
+        </div>
+        <span class="ml-auto cursor-pointer text-[12.5px] text-primary">Change</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3.5 p-4 sm:grid-cols-2">
+      <app-form-field label="Reason for visit" [required]="true" [span2]="true">
+        <input #reason [class]="fieldClass" value="Chest pain, shortness of breath" />
+      </app-form-field>
+      <app-form-field label="Department / service">
+        <select [class]="fieldClass">
+          <option>General outpatient</option>
+          <option>Paediatrics</option>
+          <option>Antenatal</option>
+          <option>Dressing / injections</option>
+          <option>Laboratory</option>
+        </select>
+      </app-form-field>
+      <app-form-field label="Preferred doctor">
+        <select [class]="fieldClass">
+          <option>Any available</option>
+          <option>Dr. Kamau</option>
+          <option>Dr. Otieno</option>
+          <option>Dr. Njoroge</option>
+        </select>
+      </app-form-field>
+      <div class="sm:col-span-2">
+        <span class="mb-1.5 block text-[12.5px] text-secondary-foreground">Priority</span>
+        <div class="flex gap-1.5">
+          <span
+            class="flex h-9 flex-1 items-center justify-center rounded-md border border-destructive bg-danger-bg text-[13px] font-semibold text-danger"
+            >Urgent</span
+          >
+          <span class="flex h-9 flex-1 items-center justify-center rounded-md border border-input text-[13px]">Normal</span>
+          <span class="flex h-9 flex-1 items-center justify-center rounded-md border border-input text-[13px]">Low</span>
+        </div>
+        <div class="mt-1.5 text-[12px] text-warning">
+          Urgent moves the patient to the top of the waiting list and alerts the duty nurse.
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-2.5 border-t border-border-soft p-4">
+      <button
+        type="button"
+        (click)="addToQueue()"
+        class="flex h-9 items-center rounded-[7px] bg-primary px-3.5 text-[13.5px] font-medium text-primary-foreground hover:bg-primary-hover"
+      >
+        Add to queue
+      </button>
+      <a routerLink="/queue" class="flex h-9 items-center text-[13.5px] text-muted-foreground">Cancel</a>
+    </div>
+  </section>
+</div>

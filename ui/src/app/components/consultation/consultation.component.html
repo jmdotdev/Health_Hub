@@ -1,0 +1,184 @@
+<div class="mb-3.5 flex flex-col gap-3 rounded-[9px] border border-border bg-card p-4 lg:flex-row lg:items-center lg:justify-between">
+  <div class="flex min-w-0 flex-wrap items-center gap-3.5">
+    <div class="flex size-[42px] flex-none items-center justify-center rounded-full bg-accent text-[14px] font-semibold text-accent-foreground">
+      MW
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <a [routerLink]="['/patients', patient.id]" class="text-[17px] font-semibold hover:underline">{{ patient.name }}</a>
+        <span class="font-mono text-[12.5px] text-muted-foreground">{{ patient.id }}</span>
+      </div>
+      <div class="mt-0.5 text-[12.5px] text-muted-foreground">{{ patient.age }} · {{ patient.sex }} · Diabetes review · waited 14m</div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <span class="flex items-center gap-1.5 rounded-[5px] border border-danger-border bg-danger-bg px-2.5 py-1 text-[12px] font-medium text-danger"
+        >⚠ Penicillin allergy</span
+      >
+      <span class="rounded-[5px] border border-warning-border bg-warning-bg px-2.5 py-1 text-[12px] text-warning">T2 diabetes</span>
+      <span class="rounded-[5px] border border-border bg-secondary px-2.5 py-1 text-[12px] text-secondary-foreground">Metformin 500mg BD</span>
+    </div>
+  </div>
+  <div class="flex flex-none gap-2">
+    <button type="button" (click)="saveDraft()" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+      Save draft
+    </button>
+    <button
+      type="button"
+      (click)="completeVisit()"
+      class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+    >
+      Complete visit
+    </button>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 items-start gap-3.5 lg:grid-cols-[1.5fr_1fr]">
+  <div class="flex flex-col gap-3.5">
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Consultation note</div>
+      <div class="flex flex-col gap-3.5 p-4">
+        <app-form-field label="Chief complaint">
+          <input [class]="fieldClass" value="Dizziness on standing, 2 weeks" />
+        </app-form-field>
+        <div>
+          <span class="mb-1.5 block text-[12.5px] text-secondary-foreground">Symptoms</span>
+          <div class="flex flex-wrap gap-1.5">
+            @for (s of symptoms; track s) {
+              <span
+                (click)="toggleSymptom(s)"
+                class="cursor-pointer rounded-[5px] border px-2.5 py-1 text-[12.5px]"
+                [class]="
+                  selectedSymptoms().has(s)
+                    ? 'border-primary bg-accent text-accent-foreground'
+                    : 'border-input text-secondary-foreground'
+                "
+                >{{ s }}</span
+              >
+            }
+            <span class="cursor-pointer rounded-[5px] border border-dashed border-input px-2.5 py-1 text-[12.5px] text-muted-foreground"
+              >+ Other</span
+            >
+          </div>
+        </div>
+        <app-form-field label="Examination findings">
+          <textarea [class]="fieldClass" class="!h-[70px] resize-y py-2 leading-[1.5]"
+            >Alert, well hydrated. Postural drop 14 mmHg. Chest clear. Peripheral pulses intact. Feet: no ulceration, sensation preserved.</textarea
+          >
+        </app-form-field>
+        <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+          <app-form-field label="Diagnosis">
+            <input [class]="fieldClass" value="Postural hypotension; T2DM suboptimal control" />
+          </app-form-field>
+          <app-form-field label="ICD-10">
+            <input [class]="fieldClass" class="font-mono" value="E11.9 · I95.1" />
+          </app-form-field>
+        </div>
+        <app-form-field label="Treatment plan & follow-up">
+          <textarea [class]="fieldClass" class="!h-16 resize-y py-2 leading-[1.5]"
+            >Continue Metformin. Increase fluids, rise slowly. Repeat HbA1c in 6 weeks; review with fasting glucose log.</textarea
+          >
+        </app-form-field>
+      </div>
+    </section>
+
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+        <span class="text-[14px] font-semibold">Prescription</span>
+        <span class="cursor-pointer text-[12.5px] text-primary hover:underline">+ Add medication</span>
+      </div>
+      <div class="p-4">
+        <div class="flex items-center gap-3 border-b border-border-soft pb-2.5">
+          <div class="flex-1">
+            <div class="text-[13.5px] font-semibold">Metformin</div>
+            <div class="mt-0.5 text-[12.5px] text-muted-foreground">500 mg · twice daily · oral · 90 days · take with food</div>
+          </div>
+          <span class="rounded-[4px] border border-success-border bg-success-bg px-2 py-0.5 text-[12px] text-success">In stock</span>
+          <span class="cursor-pointer text-[12.5px] text-muted-foreground">Edit</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 py-3 sm:grid-cols-3 lg:grid-cols-6">
+          <app-form-field label="Medication" [span2]="true">
+            <input [class]="fieldClass" class="!h-[34px]" placeholder="Search formulary" />
+          </app-form-field>
+          <app-form-field label="Dose">
+            <input [class]="fieldClass" class="!h-[34px]" placeholder="500 mg" />
+          </app-form-field>
+          <app-form-field label="Frequency">
+            <select [class]="fieldClass" class="!h-[34px]">
+              <option>Once daily</option>
+              <option>Twice daily</option>
+              <option>3 times daily</option>
+              <option>As needed</option>
+            </select>
+          </app-form-field>
+          <app-form-field label="Route">
+            <select [class]="fieldClass" class="!h-[34px]">
+              <option>Oral</option>
+              <option>IM</option>
+              <option>IV</option>
+              <option>Topical</option>
+            </select>
+          </app-form-field>
+          <app-form-field label="Duration">
+            <input [class]="fieldClass" class="!h-[34px]" placeholder="7 days" />
+          </app-form-field>
+        </div>
+        <button type="button" class="h-[34px] rounded-md border border-input px-3 text-[13px] font-medium hover:bg-muted">Add</button>
+        <div class="mt-2.5 flex items-center gap-1.5 rounded-md border border-danger-border bg-danger-bg px-2.5 py-2 text-[12.5px] text-danger">
+          ⚠ Penicillin allergy on record — amoxicillin and related drugs are blocked for this patient.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="flex flex-col gap-3.5">
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+        <span class="text-[14px] font-semibold">Vitals</span>
+        <span class="text-[12px] text-muted-foreground">Recorded 09:21 by Nurse Wambui</span>
+      </div>
+      <div class="px-4 pb-3.5">
+        @for (v of vitals; track v.label) {
+          <div class="grid grid-cols-[1fr_90px_90px] items-center gap-2.5 border-b border-border-soft py-2 last:border-b-0">
+            <div class="text-[13px] text-secondary-foreground">{{ v.label }}</div>
+            <input
+              [value]="v.value"
+              class="h-[30px] rounded-[5px] border border-input px-2 text-right font-mono text-[13px] font-semibold outline-none focus:border-primary"
+              [class]="v.flagged ? 'text-warning' : ''"
+            />
+            <div class="text-right text-[11.5px] text-text-subtle">prev {{ v.prev }}</div>
+          </div>
+        }
+        <div class="mt-2.5 text-[12px] text-warning">Two readings above range — BP and BMI flagged for the note.</div>
+      </div>
+    </section>
+
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Context</div>
+      <div class="flex flex-col gap-2.5 p-4 text-[13px]">
+        <div>
+          <div class="mb-0.5 text-[11.5px] text-muted-foreground">Last visit · 12 Aug 2026</div>
+          <div>Diabetes review. BP 138/88. Metformin continued.</div>
+        </div>
+        <div>
+          <div class="mb-0.5 text-[11.5px] text-muted-foreground">Latest labs · 19 Aug 2026</div>
+          <div>HbA1c <strong class="text-danger">8.4%</strong> (target &lt; 7.0) · Creatinine normal</div>
+        </div>
+        <div>
+          <div class="mb-0.5 text-[11.5px] text-muted-foreground">Outstanding balance</div>
+          <div>KSh 0 · consultation fee will be invoiced at checkout</div>
+        </div>
+        <a [routerLink]="['/patients', patient.id]" class="text-[12.5px] text-primary hover:underline">Open full patient record →</a>
+      </div>
+    </section>
+
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Orders</div>
+      <div class="flex flex-wrap gap-1.5 p-4">
+        <span class="cursor-pointer rounded-md border border-input px-2.5 py-1.5 text-[12.5px]">+ Lab test</span>
+        <span class="cursor-pointer rounded-md border border-input px-2.5 py-1.5 text-[12.5px]">+ Procedure</span>
+        <span class="cursor-pointer rounded-md border border-input px-2.5 py-1.5 text-[12.5px]">+ Referral</span>
+        <span class="cursor-pointer rounded-md border border-input px-2.5 py-1.5 text-[12.5px]">+ Sick note</span>
+      </div>
+    </section>
+  </div>
+</div>

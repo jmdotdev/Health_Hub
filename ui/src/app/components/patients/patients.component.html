@@ -1,37 +1,84 @@
-<div class="patients">
-    <div class="main">
-       <div class="patients-section">
-        <div class="header">
-            <div class="card flex flex-wrap justify-content-center gap-3">
-              <input class="search" type="text" placeholder="search" />
-            </div>
-    
-            <div class="icons">
-              <i class="pi pi-bell"></i>
-              <i class="pi pi-comment"></i>
-            </div>
-        </div>
-        <div class="table-card">
-            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template pTemplate="header">
-                    <tr style="height: 30px;">
-                        <th>patient Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-product>
-                    <tr style="height: 50px;padding: 0 5px;">
-                        <td>{{ product.code }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.quantity }}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-       </div>
-    </div>
+<div class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+  <div>
+    <h1 class="mb-1 text-[21px] font-semibold">Patients</h1>
+    <div class="text-[13px] text-muted-foreground">{{ patients.count() }} records · 6 registered this week</div>
+  </div>
+  <div class="flex gap-2">
+    <button
+      type="button"
+      class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input bg-card px-3 text-[13px] font-medium hover:bg-muted"
+    >
+      Export CSV
+    </button>
+    <a
+      routerLink="/patients/register"
+      class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover"
+      >Register patient</a
+    >
+  </div>
 </div>
 
+<section class="rounded-[9px] border border-border bg-card">
+  <div class="flex flex-wrap items-center gap-2 overflow-x-auto border-b border-border-soft px-3.5 py-2.5">
+    <div class="relative min-w-[220px] max-w-[320px] flex-1">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="#98a2b3"
+        stroke-width="1.6"
+        class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2"
+      >
+        <circle cx="7" cy="7" r="4.4" /><path d="M10.4 10.4L14 14" />
+      </svg>
+      <input
+        placeholder="Filter this list"
+        class="h-8 w-full rounded-md border border-input bg-card pl-[30px] pr-2.5 text-[13px] outline-none focus:border-primary"
+      />
+    </div>
+    <select class="h-8 rounded-md border border-input bg-card px-2 text-[13px] text-secondary-foreground">
+      <option>All doctors</option>
+      <option>Dr. Kamau</option>
+      <option>Dr. Otieno</option>
+      <option>Dr. Njoroge</option>
+    </select>
+    <select class="h-8 rounded-md border border-input bg-card px-2 text-[13px] text-secondary-foreground">
+      <option>Any status</option>
+      <option>Active</option>
+      <option>Needs review</option>
+      <option>Inactive</option>
+    </select>
+    <select class="h-8 rounded-md border border-input bg-card px-2 text-[13px] text-secondary-foreground">
+      <option>Last visit: any time</option>
+      <option>Last 7 days</option>
+      <option>Last 30 days</option>
+      <option>Over 6 months ago</option>
+    </select>
+    <div class="ml-auto whitespace-nowrap text-[12.5px] text-muted-foreground">Sorted by last visit</div>
+  </div>
+
+  <app-data-table [columns]="columns" [rows]="patients.all()" minWidth="960px" [bordered]="false">
+    <ng-template appCell="name" let-row>
+      <a [routerLink]="['/patients', row.id]" class="font-medium text-primary hover:underline">{{ row.name }}</a>
+    </ng-template>
+    <ng-template appCell="status" let-row>
+      @let meta = $any(statusMeta)[row.status];
+      <app-status-badge [tone]="meta.tone">{{ meta.label }}</app-status-badge>
+    </ng-template>
+    <ng-template appCell="open" let-row>
+      <a [routerLink]="['/patients', row.id]" class="text-[12.5px] text-primary hover:underline">Open</a>
+    </ng-template>
+  </app-data-table>
+
+  <div class="flex flex-col items-center justify-between gap-2 px-3.5 py-2.5 text-[12.5px] text-muted-foreground sm:flex-row">
+    <div>Showing 1–{{ patients.count() }} of 2,418</div>
+    <div class="flex gap-1.5">
+      <span class="rounded-md border border-border px-2.5 py-1 text-text-subtle">Previous</span>
+      <span class="rounded-md border border-primary bg-accent px-2.5 py-1 font-medium text-accent-foreground">1</span>
+      <span class="cursor-pointer rounded-md border border-border px-2.5 py-1">2</span>
+      <span class="cursor-pointer rounded-md border border-border px-2.5 py-1">3</span>
+      <span class="cursor-pointer rounded-md border border-border px-2.5 py-1">Next</span>
+    </div>
+  </div>
+</section>

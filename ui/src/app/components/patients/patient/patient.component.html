@@ -1,18 +1,243 @@
-<div class="patient">
-    <div class="main">
-       <div class="patient-section">
-        <div class="header">
-            <div class="card flex flex-wrap justify-content-center gap-3">
-              <input class="search" type="text" placeholder="search" />
-            </div>
-    
-            <div class="icons">
-              <i class="pi pi-bell"></i>
-              <i class="pi pi-comment"></i>
-            </div>
-        </div>
-       </div>
+@let p = patient();
+@let d = detail();
+
+<a routerLink="/patients" class="mb-2.5 inline-block text-[12.5px] text-muted-foreground hover:underline">← Back to patients</a>
+
+<section class="mb-3.5 rounded-[9px] border border-border bg-card">
+  <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
+    <div class="flex size-[52px] flex-none items-center justify-center rounded-full bg-accent text-[17px] font-semibold text-accent-foreground">
+      {{ initials() }}
     </div>
-</div>
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-[19px] font-semibold">{{ p.name }}</h1>
+        <app-status-badge tone="success">Active</app-status-badge>
+      </div>
+      <div class="mt-1 flex flex-wrap gap-3.5 text-[12.5px] text-muted-foreground">
+        <span class="font-mono">{{ p.id }}</span>
+        <span>{{ p.age }} yrs · {{ p.sex }}</span>
+        <span>{{ p.phone }}</span>
+        <span>Registered 18 Jun 2024</span>
+        <span>{{ p.doctor }}</span>
+      </div>
+    </div>
+    <div class="flex flex-none flex-wrap gap-2">
+      <button type="button" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+        Book appointment
+      </button>
+      <a routerLink="/queue" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] border border-input px-3 text-[13px] font-medium hover:bg-muted">
+        Add to queue
+      </a>
+      <a routerLink="/consultation" class="flex h-[34px] items-center whitespace-nowrap rounded-[7px] bg-primary px-3 text-[13px] font-medium text-primary-foreground hover:bg-primary-hover">
+        Start consultation
+      </a>
+    </div>
+  </div>
 
+  <div class="flex flex-wrap gap-2.5 px-4 pb-3.5">
+    @if (d.allergy) {
+      <div class="flex items-center gap-2 rounded-[7px] border border-danger-border bg-danger-bg px-3 py-2 text-[12.5px] font-medium text-danger">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M8 2.6l6 10.8H2z" /><path d="M8 6.6v3.2M8 11.6v.1" />
+        </svg>
+        Allergy · {{ d.allergy }}
+      </div>
+    }
+    <div class="flex items-center gap-2 rounded-[7px] border border-warning-border bg-warning-bg px-3 py-2 text-[12.5px] font-medium text-warning">
+      {{ d.conditions }}
+    </div>
+    <div class="flex items-center gap-2 rounded-[7px] border border-border bg-secondary px-3 py-2 text-[12.5px] text-secondary-foreground">
+      Blood group O+
+    </div>
+  </div>
 
+  <div class="flex gap-0.5 overflow-x-auto border-t border-border-soft px-2.5">
+    @for (tab of tabs; track tab) {
+      <button
+        type="button"
+        (click)="activeTab.set(tab)"
+        class="whitespace-nowrap border-b-2 px-3 py-2.5 text-[13px]"
+        [class]="activeTab() === tab ? 'border-primary font-semibold text-accent-foreground' : 'border-transparent font-normal text-muted-foreground'"
+      >
+        {{ tab }}
+      </button>
+    }
+  </div>
+</section>
+
+@switch (activeTab()) {
+  @case ('Overview') {
+    <div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_1.25fr]">
+      <div class="flex flex-col gap-4">
+        <section class="rounded-[9px] border border-border bg-card">
+          <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Patient summary</div>
+          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 p-4 text-[13px]">
+            <div class="text-muted-foreground">Date of birth</div>
+            <div>{{ d.dob }}</div>
+            <div class="text-muted-foreground">National ID</div>
+            <div class="font-mono text-[12.5px]">{{ d.nationalId }}</div>
+            <div class="text-muted-foreground">Address</div>
+            <div>{{ d.address }}</div>
+            <div class="text-muted-foreground">Email</div>
+            <div>{{ d.email }}</div>
+            <div class="text-muted-foreground">Emergency</div>
+            <div>{{ d.emergency }}</div>
+            <div class="text-muted-foreground">Insurance</div>
+            <div>{{ d.insurance }}</div>
+          </div>
+          <div class="grid gap-2.5 px-4 pb-3.5">
+            <div>
+              <div class="mb-1 text-[11px] tracking-wide text-muted-foreground uppercase">Existing conditions</div>
+              <div class="text-[13px]">{{ d.conditions }}</div>
+            </div>
+            <div>
+              <div class="mb-1 text-[11px] tracking-wide text-muted-foreground uppercase">Current medications</div>
+              <div class="text-[13px] whitespace-pre-line">{{ d.medications }}</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-[9px] border border-border bg-card">
+          <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Latest vitals · {{ d.vitalsDate }}</div>
+          <div class="grid grid-cols-2 gap-3.5 p-4 sm:grid-cols-3">
+            @for (v of d.vitals; track v.label) {
+              <div>
+                <div class="text-[11.5px] text-muted-foreground">{{ v.label }}</div>
+                <div class="font-mono text-[16px] font-semibold" [class.text-warning]="v.flagged">{{ v.value }}</div>
+                <div class="text-[11px] text-text-subtle">{{ v.prev }}</div>
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <section class="rounded-[9px] border border-border bg-card">
+          <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+            <span class="text-[14px] font-semibold">Most recent visit</span>
+            <span class="text-[12.5px] text-muted-foreground">{{ d.lastVisit.date }} · {{ d.lastVisit.doctor }}</span>
+          </div>
+          <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 p-4 text-[13px]">
+            <div class="text-muted-foreground">Reason</div>
+            <div>{{ d.lastVisit.reason }}</div>
+            <div class="text-muted-foreground">Diagnosis</div>
+            <div>{{ d.lastVisit.diagnosis }}</div>
+            <div class="text-muted-foreground">Treatment</div>
+            <div>{{ d.lastVisit.treatment }}</div>
+            <div class="text-muted-foreground">Follow-up</div>
+            <div>{{ d.lastVisit.followUp }}</div>
+          </div>
+        </section>
+
+        <section class="rounded-[9px] border border-border bg-card">
+          <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+            <span class="text-[14px] font-semibold">Medical timeline</span>
+            <span class="text-[12.5px] text-muted-foreground">All events</span>
+          </div>
+          <div class="p-4">
+            @for (e of d.timeline; track e.title + e.date) {
+              <div class="grid grid-cols-[92px_1fr] gap-3.5">
+                <div class="pt-px text-[12px] tabular-nums text-muted-foreground">{{ e.date }}</div>
+                <div class="relative border-l border-border py-0 pb-4.5 pl-4">
+                  <span
+                    class="absolute top-1 -left-[4.5px] size-2 rounded-full border-2 border-card"
+                    [class]="e.dot === 'success' ? 'bg-success' : e.dot === 'neutral' ? 'bg-text-subtle' : 'bg-primary'"
+                  ></span>
+                  <div class="text-[13px] font-medium">{{ e.title }}</div>
+                  <div class="mt-0.5 text-[12.5px] text-muted-foreground">{{ e.body }}</div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+    </div>
+  }
+
+  @case ('Prescriptions') {
+    <div class="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
+      <section class="rounded-[9px] border border-border bg-card">
+        <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+          <span class="text-[14px] font-semibold">Active prescriptions</span>
+          <span class="cursor-pointer text-[12.5px] text-primary hover:underline">Print</span>
+        </div>
+        <div class="px-4 pb-3.5">
+          @for (rx of d.activePrescriptions; track rx.drug) {
+            <div class="border-b border-border-soft py-3 last:border-b-0">
+              <div class="flex items-baseline justify-between gap-2">
+                <div class="text-[14px] font-semibold">{{ rx.drug }}</div>
+                <app-status-badge tone="success">{{ rx.status }}</app-status-badge>
+              </div>
+              <div class="mt-0.5 text-[13px] text-secondary-foreground">{{ rx.detail }}</div>
+              <div class="mt-0.5 text-[12.5px] text-muted-foreground">{{ rx.note }}</div>
+            </div>
+          }
+        </div>
+      </section>
+      <section class="rounded-[9px] border border-border bg-card">
+        <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Previous prescriptions</div>
+        <div class="px-4 pb-3.5">
+          @for (rx of d.pastPrescriptions; track rx.drug) {
+            <div class="border-b border-border-soft py-3 last:border-b-0">
+              <div class="text-[14px] font-semibold text-secondary-foreground">{{ rx.drug }}</div>
+              <div class="mt-0.5 text-[13px] text-muted-foreground">{{ rx.detail }}</div>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+  }
+
+  @case ('Lab Results') {
+    <section class="rounded-[9px] border border-border bg-card">
+      <div class="flex items-center justify-between border-b border-border-soft px-4 py-3">
+        <span class="text-[14px] font-semibold">Lab results</span>
+        <span class="cursor-pointer text-[12.5px] text-primary hover:underline">Upload result</span>
+      </div>
+      <app-data-table [columns]="labColumns" [rows]="d.labs" minWidth="760px" [bordered]="false">
+        <ng-template appCell="value" let-row>
+          <span [class]="'text-' + $any(labTone)[row.status]">{{ row.value }}</span>
+        </ng-template>
+        <ng-template appCell="status" let-row>
+          <app-status-badge [tone]="$any(labTone)[row.status]">{{ row.status === 'Normal' ? '● Normal' : '▲ ' + row.status }}</app-status-badge>
+        </ng-template>
+      </app-data-table>
+    </section>
+  }
+
+  @case ('Medical History') {
+    <div class="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
+      <section class="rounded-[9px] border border-border bg-card">
+        <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Diagnoses & conditions</div>
+        <div class="px-4 pb-3.5 text-[13px]">
+          @for (dx of d.diagnoses; track dx.title) {
+            <div class="border-b border-border-soft py-2.5 last:border-b-0">
+              <div class="font-medium">{{ dx.title }}</div>
+              <div class="mt-0.5 text-muted-foreground">{{ dx.meta }}</div>
+            </div>
+          }
+        </div>
+      </section>
+      <section class="rounded-[9px] border border-border bg-card">
+        <div class="border-b border-border-soft px-4 py-3 text-[14px] font-semibold">Family & social history</div>
+        <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 p-4 text-[13px]">
+          <div class="text-muted-foreground">Family</div>
+          <div>{{ d.familySocial.family }}</div>
+          <div class="text-muted-foreground">Smoking</div>
+          <div>{{ d.familySocial.smoking }}</div>
+          <div class="text-muted-foreground">Alcohol</div>
+          <div>{{ d.familySocial.alcohol }}</div>
+          <div class="text-muted-foreground">Occupation</div>
+          <div>{{ d.familySocial.occupation }}</div>
+          <div class="text-muted-foreground">Last updated</div>
+          <div>{{ d.familySocial.updated }}</div>
+        </div>
+      </section>
+    </div>
+  }
+
+  @default {
+    @let copy = emptyCopy(activeTab());
+    <app-empty-state icon="folder" [title]="copy.title" [description]="copy.body" [actionLabel]="copy.action" />
+  }
+}

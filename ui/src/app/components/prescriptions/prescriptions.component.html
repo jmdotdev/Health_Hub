@@ -1,0 +1,20 @@
+<div class="mb-4">
+  <h1 class="mb-1 text-[21px] font-semibold">Prescriptions</h1>
+  <div class="text-[13px] text-muted-foreground">14 issued today · 3 awaiting dispensing at the pharmacy counter</div>
+</div>
+
+<app-data-table [columns]="columns" [rows]="prescriptions.list()" minWidth="820px">
+  <ng-template appCell="drug" let-row>
+    <div class="font-medium">{{ row.drug }}</div>
+    <div class="mt-px text-[12px] text-muted-foreground">{{ row.detail }}</div>
+  </ng-template>
+  <ng-template appCell="status" let-row>
+    <app-status-badge [tone]="$any(statusTone)[row.status]">{{ row.status }}</app-status-badge>
+  </ng-template>
+  <ng-template appCell="actions" let-row>
+    <div class="flex gap-2.5 text-[12.5px] text-primary">
+      <span class="cursor-pointer hover:underline">Print</span>
+      <span class="cursor-pointer text-muted-foreground hover:underline">Dispense</span>
+    </div>
+  </ng-template>
+</app-data-table>
