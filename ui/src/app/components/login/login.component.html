@@ -11,7 +11,11 @@
 
     <section class="rounded-[9px] border border-border bg-card p-6">
       <h1 class="mb-1 text-[19px] font-semibold">Sign in</h1>
-      <div class="mb-5 text-[13px] text-muted-foreground">Use your clinic account to access Healthub.</div>
+      <div class="mb-3.5 text-[13px] text-muted-foreground">Use your clinic account to access Healthub.</div>
+
+      <div class="mb-4 rounded-[7px] border border-info-border bg-info-bg px-3 py-2.5 text-[12.5px] text-info">
+        Authentication isn't wired up yet. Enter any email and password to sign in.
+      </div>
 
       <form class="flex flex-col gap-3.5" (submit)="$event.preventDefault(); signIn()">
         <app-form-field label="Email">
